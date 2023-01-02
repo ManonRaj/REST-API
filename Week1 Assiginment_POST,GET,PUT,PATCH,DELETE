@@ -1,0 +1,434 @@
+{
+	"info": {
+		"_postman_id": "a6db8a93-069d-4b27-b30d-3a93f5d2457e",
+		"name": "Week1 Assignment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25046045"
+	},
+	"item": [
+		{
+			"name": "Create new SNOW incident",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//1. Test Status code\r",
+							"pm.test(\"1. Successful POST request (201 status)\", () => {\r",
+							"  pm.expect(pm.response.code).to.be.oneOf([201,202]);\r",
+							"});\r",
+							"pm.test(\"2. Status code name has string (Create)\", () => {\r",
+							"  pm.response.to.have.status(\"Created\");\r",
+							"});\r",
+							"//2. Test Response Headers\r",
+							"pm.test(\"3. Content-Type header is present\", () => {\r",
+							"  pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"pm.test(\"4. Content-Type header is application/json\", () => {\r",
+							"  pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json;charset=UTF-8');\r",
+							"});\r",
+							"//Test Response Body\r",
+							"pm.test(\"5. Body contains string (sys_id)\",() => {\r",
+							"  pm.expect(pm.response.text()).to.include(\"sys_id\");\r",
+							"});\r",
+							"pm.test(\"6. Validate the Company name (TCS)\"),()=>{    \r",
+							"pm.responseBody.has(\"TCS\")\r",
+							"};\r",
+							"//Testing response times\r",
+							"pm.test(\"7. Response time is less than 1500ms\", () => {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(1500);\r",
+							"});\r",
+							"\r",
+							"Resp = pm.response.json();\r",
+							"pm.globals.set(\"systemID\",Resp.result.sys_id);\r",
+							"\r",
+							"console.log(\"systemID:\" + Resp.result.sys_id);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true,
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"description\": \"Post button is not working when create the new incident in SNOW\",\r\n    \"assigned_to\": \"8767hdye837d\",\r\n    \"company\": \"TCS\",\r\n    \"short_description\": \"Unable to create new incident\"\r\n}"
+				},
+				"url": {
+					"raw": "https://dev75672.service-now.com/api/now/table/incident",
+					"protocol": "https",
+					"host": [
+						"dev75672",
+						"service-now",
+						"com"
+					],
+					"path": [
+						"api",
+						"now",
+						"table",
+						"incident"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve incident by using query param",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.expect(pm.response.code).to.eql(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true,
+					"host": true
+				}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Acce",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "au",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Host",
+						"value": "<calculated when request is sent>",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://dev75672.service-now.com/api/now/table/incident/{{systemID}}?sys_id=admin&number=INC0010051",
+					"protocol": "https",
+					"host": [
+						"dev75672",
+						"service-now",
+						"com"
+					],
+					"path": [
+						"api",
+						"now",
+						"table",
+						"incident",
+						"{{systemID}}"
+					],
+					"query": [
+						{
+							"key": "sys_id",
+							"value": "admin"
+						},
+						{
+							"key": "number",
+							"value": "INC0010051"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modify incident record",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Validate the Request URL :  \" + pm.request.url);\r",
+							"pm.test(\"Validate the Request Body :  \" + pm.request.body);\r",
+							"pm.test(\"Validate whether company name is updated in response body :  \"),()=>{\r",
+							"    pm.responseBody.has(\"Infosys\")\r",
+							"    };\r",
+							"//1. Test Status code\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"pm.test(\"Status code name has string (OK)\", () => {\r",
+							"  pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"//Test Response Body\r",
+							"pm.test(\"Body contains string (assigned_to)\",() => {\r",
+							"  pm.expect(pm.response.text()).to.include(\"assigned_to\");\r",
+							"});\r",
+							"pm.test(\"Validate the Company name (Infosys)\"),()=>{    \r",
+							"pm.responseBody.has(\"Infosys\");\r",
+							"};\r",
+							"\r",
+							"Resp = pm.response.json();\r",
+							"pm.globals.set(\"systemID\",Resp.result.sys_id);\r",
+							"\r",
+							"console.log(\"systemID:\" + Resp.result.sys_id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"company\": \"Infosys\",\r\n    \"assigned_to\": \"8767hdye837E\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev75672.service-now.com/api/now/table/incident/{{systemID}}",
+					"protocol": "https",
+					"host": [
+						"dev75672",
+						"service-now",
+						"com"
+					],
+					"path": [
+						"api",
+						"now",
+						"table",
+						"incident",
+						"{{systemID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update incident record",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Validate the Request URL :  \" + pm.request.url);\r",
+							"pm.test(\"Validate the Request Body :  \" + pm.request.body);\r",
+							"pm.test(\"Validate whether company name is updated in response body :  \"),()=>{\r",
+							"    pm.responseBody.has(\"WIPRO\")\r",
+							"    };\r",
+							"//1. Test Status code\r",
+							"pm.test(\"Status code is 200\", () => {\r",
+							"  pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"pm.test(\"Status code name has string (OK)\", () => {\r",
+							"  pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"//Test Response Body\r",
+							"pm.test(\"Body contains string (assigned_to)\",() => {\r",
+							"  pm.expect(pm.response.text()).to.include(\"assigned_to\");\r",
+							"});\r",
+							"pm.test(\"Validate the Company name (WIPRO)\"),()=>{    \r",
+							"pm.responseBody.has(\"WIPRO\");\r",
+							"};\r",
+							"\r",
+							"Resp = pm.response.json();\r",
+							"pm.globals.set(\"systemID\",Resp.result.sys_id);\r",
+							"\r",
+							"console.log(\"systemID:\" + Resp.result.sys_id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"assigned_to\": \"ManonRaj S\",\r\n    \"company\": \"WIPRO\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev75672.service-now.com/api/now/table/incident/{{systemID}}",
+					"protocol": "https",
+					"host": [
+						"dev75672",
+						"service-now",
+						"com"
+					],
+					"path": [
+						"api",
+						"now",
+						"table",
+						"incident",
+						"{{systemID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete the incident record",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"Resp=pm.response.json();\r",
+							"pm.globals.set(\"SystemID\",Resp.result.sys_id);\r",
+							"\r",
+							"console.log(\"systemID:\" + Resp.result.sys_id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "acce",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://dev75672.service-now.com/api/now/table/incident/{{systemID}}",
+					"protocol": "https",
+					"host": [
+						"dev75672",
+						"service-now",
+						"com"
+					],
+					"path": [
+						"api",
+						"now",
+						"table",
+						"incident",
+						"{{systemID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "8+n7qTZy$PPc",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "admin",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
